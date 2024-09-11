@@ -1,0 +1,37 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  username   String
+  phone      String
+  Profile    Profile?   // Remove the @relation attribute here
+  profileId  Int?       // Add this field if you want a one-to-one relation with Profile
+  SomeModels SomeModel[] // One-to-many relationship
+}
+
+model Profile {
+  id      Int    @id @default(autoincrement())
+  userId  Int    @unique // Unique field for one-to-one relation
+  email   String
+  gender  String
+  address String
+  pincode String
+  city    String
+  state   String
+  country String
+
+  User User @relation(fields: [userId], references: [id])
+}
+
+model SomeModel {
+  id      Int    @id @default(autoincrement())
+  userId  Int    @unique // Ensure this field is unique for one-to-one relation
+  User    User   @relation(fields: [userId], references: [id])
+}
