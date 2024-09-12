@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { Profile } from '@prisma/client';
 
@@ -35,7 +35,14 @@ export class ProfilesController {
     state: string;
     country: string;
   }): Promise<Profile> {
-    return this.profilesService.create(createProfileDto);
+    try {
+      return await this.profilesService.create(createProfileDto);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   @Patch(':id')

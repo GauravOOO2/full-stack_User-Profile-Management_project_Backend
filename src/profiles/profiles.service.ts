@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';  // Ensure you have PrismaService set up
-import { Profile } from '@prisma/client';
+import { Profile, Prisma } from '@prisma/client';
 
 @Injectable()
 export class ProfilesService {
@@ -32,7 +32,25 @@ export class ProfilesService {
     state: string;
     country: string;
   }): Promise<Profile> {
-    return this.prisma.profile.create({ data });
+    // First, check if the user exists
+    const user = await this.prisma.user.findUnique({
+      where: { id: data.userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${data.userId} not found`);
+    }
+
+    try {
+      return await this.prisma.profile.create({ data });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new BadRequestException('A profile for this user already exists');
+        }
+      }
+      throw error;
+    }
   }
 
   async update(id: number, updateProfileDto: Partial<Profile>): Promise<Profile> {
