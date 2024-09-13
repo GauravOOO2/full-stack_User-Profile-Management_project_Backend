@@ -31,21 +31,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     return this.prisma.user.create({
-      data: {
-        ...createUserDto,
-        profile: { // Change 'Profile' to 'profile'
-          create: {
-            email: '', // You might want to add these fields to your user creation form
-            gender: '',
-            address: '',
-            pincode: '',
-            city: '',
-            state: '',
-            country: ''
-          }
-        },
-      },
-      include: { profile: true }, // Include the related profile data
+      data: createUserDto,
     });
   }
 
