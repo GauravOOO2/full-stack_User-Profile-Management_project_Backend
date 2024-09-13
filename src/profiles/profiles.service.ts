@@ -27,14 +27,16 @@ export class ProfilesService {
   async createProfile(createProfileDto: CreateProfileDto) {
     // Check if a profile already exists for this user
     const existingProfile = await this.prisma.profile.findUnique({
-      where: { id: createProfileDto.userId },
+      where: { userId: createProfileDto.userId },
     });
 
     if (existingProfile) {
-      throw new ConflictException('Profile already exists for this user');
+      // If profile exists, update it instead
+      return this.updateProfile(existingProfile.id, createProfileDto);
     } else {
       return this.prisma.profile.create({
         data: {
+          userId: createProfileDto.userId,
           email: createProfileDto.email,
           gender: createProfileDto.gender,
           address: createProfileDto.address,
@@ -42,12 +44,24 @@ export class ProfilesService {
           city: createProfileDto.city,
           state: createProfileDto.state,
           country: createProfileDto.country,
-          user: {
-            connect: { id: createProfileDto.userId }
-          }
         },
       });
     }
+  }
+
+  async updateProfile(id: number, updateProfileDto: UpdateProfileDto) {
+    return this.prisma.profile.update({
+      where: { id },
+      data: {
+        email: updateProfileDto.email,
+        gender: updateProfileDto.gender,
+        address: updateProfileDto.address,
+        pincode: updateProfileDto.pincode,
+        city: updateProfileDto.city,
+        state: updateProfileDto.state,
+        country: updateProfileDto.country,
+      }
+    });
   }
 
   async update(id: number, updateProfileDto: UpdateProfileDto) {

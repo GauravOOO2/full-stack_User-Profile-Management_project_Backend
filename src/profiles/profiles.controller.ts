@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFou
 import { ProfilesService } from './profiles.service';
 import { Profile } from '@prisma/client';
 import { CreateProfileDto } from '../users/dto/create-profile.dto';
+import { UpdateProfileDto } from '../users/dto/update-profile.dto';
 
 @Controller('api/profiles')
 export class ProfilesController {
@@ -33,10 +34,10 @@ export class ProfilesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateProfileDto: Partial<Profile>
+    @Body() updateProfileDto: UpdateProfileDto
   ): Promise<Profile> {
     try {
-      return await this.profilesService.update(id, updateProfileDto);
+      return await this.profilesService.updateProfile(id, updateProfileDto);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

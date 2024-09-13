@@ -17,6 +17,7 @@ model User {
 
 model Profile {
   id      Int    @id @default(autoincrement())
+  userId  Int    @unique // Add @unique here
   email   String
   gender  String
   address String
@@ -24,7 +25,7 @@ model Profile {
   city    String
   state   String
   country String
-  user    User   @relation(fields: [id], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SomeModel {
