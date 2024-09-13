@@ -1,85 +1,124 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Full-Stack Two Endpoints Project Backend
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This project is the backend component of a full-stack application, built using the NestJS framework. It provides two main endpoints for managing users and their profiles. The backend is designed to be efficient, scalable, and easy to maintain.
 
-## Project setup
+## Tech Stack
 
+- **Framework**: [NestJS](https://nestjs.com/)
+- **Language**: TypeScript
+- **Database**: PostgreSQL (with Prisma ORM)
+- **API**: RESTful
+- **Testing**: Jest
+
+### What This Project Does
+
+1. **User Management**:
+   - Allows creation of new user accounts with basic information (username, phone number).
+   - Provides endpoints to retrieve individual users or a list of all users.
+   - Enables updating of user information.
+   - Supports deletion of user accounts.
+
+2. **Profile Management**:
+   - Each user can have an associated profile with more detailed information.
+   - Profiles include fields such as email, gender, address, pincode, city, state, and country.
+   - Offers endpoints to create, retrieve, update, and delete user profiles.
+   - Links profiles directly to user accounts for seamless data management.
+
+3. **Data Validation and Error Handling**:
+   - Implements robust input validation to ensure data integrity.
+   - Provides meaningful error messages for invalid requests or server issues.
+
+4. **Database Integration**:
+   - Uses PostgreSQL for persistent data storage.
+   - Employs Prisma ORM for efficient and type-safe database operations.
+
+5. **RESTful API Design**:
+   - Follows RESTful principles for intuitive and standardized API endpoints.
+   - Supports JSON data format for request and response payloads.
+
+This backend is designed to be the foundation for various applications that require user management functionality, such as:
+- Social networking platforms
+- E-commerce websites with user accounts
+- Content management systems
+- Any application requiring user registration and profile management
+
+By providing a solid backend infrastructure for user and profile management, this project allows frontend developers to focus on creating engaging user interfaces and experiences, while ensuring that user data is handled securely and efficiently on the server side.
+
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- Node.js (v14 or later)
+- npm (v6 or later)
+- PostgreSQL database
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/GauravOOO2/full-stack_two_endPoints_project_Backend.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd full-stack_two_endPoints_project_Backend
+   ```
+
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Set up your environment variables:
+   - Create a `.env` file in the root directory
+   - Add your database connection string and other necessary variables
+
+5. Run Prisma migrations:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+## Running the Application
+
+To run the application in development mode:
 ```bash
-$ npm install
+npm run start
 ```
 
-## Compile and run the project
-
+To run the application in production mode:
 ```bash
-# development
-$ npm run start
+npm run build
+npm run start:prod
+``` 
 
-# watch mode
-$ npm run start:dev
 
-# production mode
-$ npm run start:prod
+The server will start on `http://localhost:4000` by default.
+
+## API Endpoints
+
+- `GET /api/users`: Fetch all users
+- `POST /api/users`: Create a new user
+- `GET /api/users/:id`: Fetch a specific user
+- `PATCH /api/users/:id`: Update a user
+- `DELETE /api/users/:id`: Delete a user
+
+- `GET /api/profiles`: Fetch all profiles
+- `POST /api/profiles`: Create a new profile
+- `GET /api/profiles/:userId`: Fetch a specific profile
+- `PATCH /api/profiles/:userId`: Update a profile
+- `DELETE /api/profiles/:userId`: Delete a profile
+
+## Testing
+
+To run unit tests:
+```bash
+npm run test
 ```
 
-## Run tests
-
+To run E2E tests:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run test:e2e
 ```
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
