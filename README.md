@@ -130,3 +130,16 @@ If you have any questions or feedback, please contact:
 Gaurav - varmagaurav840@gmail.com
 
 Project Link: [https://github.com/GauravOOO2/full-stack_two_endPoints_project_Backend](https://github.com/GauravOOO2/full-stack_two_endPoints_project_Backend)
+
+## Acknowledgments
+
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- [Prisma Documentation](https://www.prisma.io/docs/)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Jest Testing Framework](https://jestjs.io/docs/getting-started)
+- [Node.js Documentation](https://nodejs.org/en/docs/)
+- [RESTful API Design Best Practices](https://restfulapi.net/)
+- [Swagger API Documentation](https://swagger.io/docs/)
+
+Special thanks to the open-source community and the creators of these technologies that made this project possible.
