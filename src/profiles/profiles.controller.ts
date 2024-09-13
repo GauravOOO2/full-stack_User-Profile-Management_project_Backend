@@ -13,10 +13,10 @@ export class ProfilesController {
     return this.profilesService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Profile> {
+  @Get(':userId')
+  async findOne(@Param('userId', ParseIntPipe) userId: number): Promise<Profile> {
     try {
-      return await this.profilesService.findOne(id);
+      return await this.profilesService.findOneByUserId(userId);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -28,16 +28,16 @@ export class ProfilesController {
 
   @Post()
   async create(@Body() createProfileDto: CreateProfileDto): Promise<Profile> {
-    return this.profilesService.createProfile(createProfileDto);
+    return this.profilesService.createOrUpdateProfile(createProfileDto);
   }
 
-  @Patch(':id')
+  @Patch(':userId')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('userId', ParseIntPipe) userId: number,
     @Body() updateProfileDto: UpdateProfileDto
   ): Promise<Profile> {
     try {
-      return await this.profilesService.updateProfile(id, updateProfileDto);
+      return await this.profilesService.updateProfileByUserId(userId, updateProfileDto);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -47,10 +47,10 @@ export class ProfilesController {
     }
   }
 
-  @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<Profile> {
+  @Delete(':userId')
+  async remove(@Param('userId', ParseIntPipe) userId: number): Promise<Profile> {
     try {
-      return await this.profilesService.remove(id);
+      return await this.profilesService.removeByUserId(userId);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

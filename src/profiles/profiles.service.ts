@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Profile } from '@prisma/client';
 import { CreateProfileDto } from '../users/dto/create-profile.dto';
@@ -12,84 +12,50 @@ export class ProfilesService {
     return this.prisma.profile.findMany();
   }
 
-  async findOne(id: number): Promise<Profile> {
+  async findOneByUserId(userId: number): Promise<Profile> {
     const profile = await this.prisma.profile.findUnique({
-      where: { id },
+      where: { userId },
     });
 
     if (!profile) {
-      throw new NotFoundException(`Profile with ID ${id} not found`);
+      throw new NotFoundException(`Profile for user with ID ${userId} not found`);
     }
 
     return profile;
   }
 
-  async createProfile(createProfileDto: CreateProfileDto) {
-    // Check if a profile already exists for this user
-    const existingProfile = await this.prisma.profile.findUnique({
-      where: { userId: createProfileDto.userId },
-    });
+  async createOrUpdateProfile(createProfileDto: CreateProfileDto): Promise<Profile> {
+    const { userId, ...profileData } = createProfileDto;
 
-    if (existingProfile) {
-      // If profile exists, update it instead
-      return this.updateProfile(existingProfile.id, createProfileDto);
-    } else {
-      return this.prisma.profile.create({
-        data: {
-          userId: createProfileDto.userId,
-          email: createProfileDto.email,
-          gender: createProfileDto.gender,
-          address: createProfileDto.address,
-          pincode: createProfileDto.pincode,
-          city: createProfileDto.city,
-          state: createProfileDto.state,
-          country: createProfileDto.country,
-        },
-      });
+    return this.prisma.profile.upsert({
+      where: { userId },
+      update: profileData,
+      create: { userId, ...profileData },
+    });
+  }
+
+  async updateProfileByUserId(userId: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
+    const existingProfile = await this.prisma.profile.findUnique({ where: { userId } });
+
+    if (!existingProfile) {
+      throw new NotFoundException(`Profile for user with ID ${userId} not found`);
     }
-  }
 
-  async updateProfile(id: number, updateProfileDto: UpdateProfileDto) {
     return this.prisma.profile.update({
-      where: { id },
-      data: {
-        email: updateProfileDto.email,
-        gender: updateProfileDto.gender,
-        address: updateProfileDto.address,
-        pincode: updateProfileDto.pincode,
-        city: updateProfileDto.city,
-        state: updateProfileDto.state,
-        country: updateProfileDto.country,
-      }
+      where: { userId },
+      data: updateProfileDto,
     });
   }
 
-  async update(id: number, updateProfileDto: UpdateProfileDto) {
-    return this.prisma.profile.update({
-      where: { id },
-      data: {
-        email: updateProfileDto.email,
-        gender: updateProfileDto.gender,
-        address: updateProfileDto.address,
-        pincode: updateProfileDto.pincode,
-        city: updateProfileDto.city,
-        state: updateProfileDto.state,
-        country: updateProfileDto.country,
-      }
-    });
-  }
+  async removeByUserId(userId: number): Promise<Profile> {
+    const existingProfile = await this.prisma.profile.findUnique({ where: { userId } });
 
-  async remove(id: number): Promise<Profile> {
-    try {
-      const deletedProfile = await this.prisma.profile.delete({
-        where: { id },
-      });
-      return deletedProfile;
-    } catch (error) {
-      if (error.code === 'P2025') {
-        throw new NotFoundException(`Profile with ID ${id} not found`);
-      }
-      throw error;
+    if (!existingProfile) {
+      throw new NotFoundException(`Profile for user with ID ${userId} not found`);
     }
+
+    return this.prisma.profile.delete({
+      where: { userId },
+    });
   }
 }
