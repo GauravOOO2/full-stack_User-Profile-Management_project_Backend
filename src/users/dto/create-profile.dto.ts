@@ -4,6 +4,9 @@ export class CreateProfileDto {
   @IsNumber()
   userId: number;
 
+  @IsString()
+  username: string;
+
   @IsEmail()
   email: string;
 

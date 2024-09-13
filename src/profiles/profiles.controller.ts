@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, InternalServerErrorException, ValidationPipe } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { Profile } from '@prisma/client';
 import { CreateProfileDto } from '../users/dto/create-profile.dto';
@@ -14,7 +14,7 @@ export class ProfilesController {
   }
 
   @Get(':userId')
-  async findOne(@Param('userId', ParseIntPipe) userId: number): Promise<Profile> {
+  async findOne(@Param('userId', ParseIntPipe) userId: number): Promise<Profile & { user: { username: string } }> {
     try {
       return await this.profilesService.findOneByUserId(userId);
     } catch (error) {
@@ -27,24 +27,21 @@ export class ProfilesController {
   }
 
   @Post()
-  async create(@Body() createProfileDto: CreateProfileDto): Promise<Profile> {
-    return this.profilesService.createOrUpdateProfile(createProfileDto);
+  async create(@Body(new ValidationPipe()) createProfileDto: CreateProfileDto): Promise<Profile & { user: { username: string } }> {
+    try {
+      return await this.profilesService.createOrUpdateProfile(createProfileDto);
+    } catch (error) {
+      console.error('Error creating profile:', error);
+      throw new InternalServerErrorException('Failed to create profile');
+    }
   }
 
   @Patch(':userId')
-  async update(
-    @Param('userId', ParseIntPipe) userId: number,
+  async updateProfile(
+    @Param('userId') userId: string,
     @Body() updateProfileDto: UpdateProfileDto
-  ): Promise<Profile> {
-    try {
-      return await this.profilesService.updateProfileByUserId(userId, updateProfileDto);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      console.error('Error in update:', error);
-      throw new InternalServerErrorException('An unexpected error occurred while updating the profile');
-    }
+  ) {
+    return await this.profilesService.updateProfileByUserId(+userId, updateProfileDto);
   }
 
   @Delete(':userId')
