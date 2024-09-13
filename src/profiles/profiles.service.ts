@@ -29,18 +29,14 @@ export class ProfilesService {
     return profile;
   }
 
-  async createProfile(createProfileDto: CreateProfileDto) {
+  async create(createProfileDto: CreateProfileDto) {
+    const { userId, ...profileData } = createProfileDto;
     return this.prisma.profile.create({
       data: {
-        user: { connect: { id: createProfileDto.userId } },
-        email: createProfileDto.email,
-        gender: createProfileDto.gender,
-        address: createProfileDto.address,
-        pincode: createProfileDto.pincode,
-        city: createProfileDto.city,
-        state: createProfileDto.state,
-        country: createProfileDto.country,
+        ...profileData,
+        user: { connect: { id: userId } },
       },
+      include: { user: true },
     });
   }
 
@@ -75,22 +71,27 @@ export class ProfilesService {
     }
   }
 
-  async updateProfile(userId: number, profileData: UpdateProfileDto) {
+  async update(userId: number, updateProfileDto: UpdateProfileDto) {
+    const { username, ...profileData } = updateProfileDto;
     return this.prisma.profile.update({
       where: { userId },
       data: {
-        user: { 
-          update: { 
-            username: profileData.username 
-          } 
-        },
-        email: profileData.email,
-        gender: profileData.gender,
-        address: profileData.address,
-        pincode: profileData.pincode,
-        city: profileData.city,
-        state: profileData.state,
-        country: profileData.country,
+        ...profileData,
+        user: username ? { update: { username } } : undefined,
+      },
+      include: { user: true },
+    });
+  }
+
+  async updateProfile(userId: number, profileData: UpdateProfileDto) {
+    const { username, ...profileUpdateData } = profileData;
+    return this.prisma.profile.update({
+      where: { userId },
+      data: {
+        ...profileUpdateData,
+        user: username ? {
+          update: { username }
+        } : undefined
       },
     });
   }
