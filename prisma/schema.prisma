@@ -8,17 +8,15 @@ generator client {
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   username   String
   phone      String
-  Profile    Profile?   // Remove the @relation attribute here
-  profileId  Int?       // Add this field if you want a one-to-one relation with Profile
-  SomeModels SomeModel[] // One-to-many relationship
+  profile    Profile?
+  someModel SomeModel?
 }
 
 model Profile {
   id      Int    @id @default(autoincrement())
-  userId  Int    @unique // Unique field for one-to-one relation
   email   String
   gender  String
   address String
@@ -26,8 +24,7 @@ model Profile {
   city    String
   state   String
   country String
-
-  User User @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model SomeModel {

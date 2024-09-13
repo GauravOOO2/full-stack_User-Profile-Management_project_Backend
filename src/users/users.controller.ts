@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param, Patch, Delete, ParseIntPipe, NotFoundException, InternalServerErrorException, ConflictException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from '@prisma/client';
+import { User, Profile } from '@prisma/client';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('api/users')
 export class UsersController {
@@ -12,7 +13,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<User & { profile?: Profile }> {
     try {
       return await this.usersService.findOne(id);
     } catch (error) {
@@ -20,12 +21,12 @@ export class UsersController {
         throw error;
       }
       console.error('Error in findOne:', error);
-      throw new Error('An unexpected error occurred');
+      throw new InternalServerErrorException('An unexpected error occurred');
     }
   }
 
   @Post()
-  async create(@Body() createUserDto: { username: string; phone: string }): Promise<User> {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 

@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { Profile } from '@prisma/client';
+import { CreateProfileDto } from '../users/dto/create-profile.dto';
 
 @Controller('api/profiles')
 export class ProfilesController {
@@ -25,24 +26,8 @@ export class ProfilesController {
   }
 
   @Post()
-  async create(@Body() createProfileDto: {
-    userId: number;
-    email: string;
-    gender: string;
-    address: string;
-    pincode: string;
-    city: string;
-    state: string;
-    country: string;
-  }): Promise<Profile> {
-    try {
-      return await this.profilesService.create(createProfileDto);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new BadRequestException(error.message);
-      }
-      throw error;
-    }
+  async create(@Body() createProfileDto: CreateProfileDto): Promise<Profile> {
+    return this.profilesService.createProfile(createProfileDto);
   }
 
   @Patch(':id')
