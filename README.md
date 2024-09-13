@@ -1,4 +1,4 @@
-# Full-Stack Two Endpoints Project Backend
+# Full-Stack User Profile Management Project Backend
 
 ## Description
 
