@@ -111,14 +111,22 @@ The server will start on `http://localhost:4000` by default.
 - `PATCH /api/profiles/:userId`: Update a profile
 - `DELETE /api/profiles/:userId`: Delete a profile
 
-## Testing
 
-To run unit tests:
-```bash
-npm run test
-```
+## Contributing
 
-To run E2E tests:
-```bash
-npm run test:e2e
-```
+Contributions to this project are welcome. Please follow these steps:
+
+1. Fork the repository
+2. Create a new branch: `git checkout -b feature-branch-name`
+3. Make your changes and commit them: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature-branch-name`
+5. Create a pull request
+
+
+## Contact
+
+If you have any questions or feedback, please contact:
+
+Gaurav - varmagaurav840@gmail.com
+
+Project Link: [https://github.com/GauravOOO2/full-stack_two_endPoints_project_Backend](https://github.com/GauravOOO2/full-stack_two_endPoints_project_Backend)
